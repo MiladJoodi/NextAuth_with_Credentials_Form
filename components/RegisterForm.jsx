@@ -46,13 +46,16 @@ const RegisterForm = () => {
           </div>
           <input
             ref={nameInputRef}
-            type="email"
+            name="fullname"
+            value={textInput.fullname}
+            type="text"
             className={`${
               nameFocus ? "outline-indigo-600" : "outline-gray-300"
             } w-full rounded-lg p-4 pe-12 pl-12 text-sm shadow-sm border`}
             placeholder="Enter email"
             onFocus={() => setNameFocus(true)}
             onBlur={() => setNameFocus(false)}
+            onChange={handleTextUpdate}
           />
 
           <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
