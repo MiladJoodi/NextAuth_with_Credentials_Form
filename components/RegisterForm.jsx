@@ -244,7 +244,7 @@ const RegisterForm = () => {
               />
             </svg>
             ): (
-              <HiOutlineEyeOff />
+              <HiOutlineEyeOff className="text-gray-400" />
             )}
            
           </span>
