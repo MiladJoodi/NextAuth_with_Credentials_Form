@@ -1,22 +1,36 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HiMail } from "react-icons/hi";
 import { HiLockClosed } from "react-icons/hi";
 import { FaUser } from "react-icons/fa";
 
 const RegisterForm = () => {
+  // color border Inputs on Focus
   const [nameFocus, setNameFocus] = useState(false);
   const [emailFocus, setEmailFocus] = useState(false);
   const [passwordFocus, setPasswordFocus] = useState(false);
+  // color border Inputs on Focus
+
+  // Focus on start with useRef
+  const nameInputRef = useRef(null);
+  // Focus on start with useRef
+
+  // useEffect to focus on Name input on start
+  useEffect(() => {
+    nameInputRef.current.focus();
+  }, []);
+  // useEffect to focus on Name input on start
 
   return (
     <form
       action="#"
       className="mb-0 mt-6 space-y-4 rounded-lg p-10 shadow-lg sm:p-6 lg:p-8"
     >
-      <p className="text-center text-lg font-medium">Complete form to Sign up</p>
+      <p className="text-center text-lg font-medium">
+        Complete form to Sign up
+      </p>
 
       <div>
         <label htmlFor="email" className="sr-only">
@@ -31,6 +45,7 @@ const RegisterForm = () => {
             />
           </div>
           <input
+            ref={nameInputRef}
             type="email"
             className={`${
               nameFocus ? "outline-indigo-600" : "outline-gray-300"
@@ -155,7 +170,7 @@ const RegisterForm = () => {
         No account? <a className="underline" href="#"></a>
         <Link href="/login" className="underline">
           Sign in
-          </Link>
+        </Link>
       </p>
     </form>
   );

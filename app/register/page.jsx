@@ -1,4 +1,4 @@
-import RegisterForm from "@/components/Register";
+import RegisterForm from "@/components/RegisterForm";
 import { BsShieldLock } from "react-icons/bs";
 
 const Register = () => {
