@@ -5,6 +5,9 @@ import { useEffect, useRef, useState } from "react";
 import { HiMail } from "react-icons/hi";
 import { HiLockClosed } from "react-icons/hi";
 import { FaUser } from "react-icons/fa";
+import toast from "react-hot-toast";
+import { signUpSchema } from "@/utils/RegisterZodSchema";
+import { HiOutlineEyeOff } from "react-icons/hi";
 
 const RegisterForm = () => {
   // color border Inputs on Focus
@@ -13,8 +16,13 @@ const RegisterForm = () => {
   const [passwordFocus, setPasswordFocus] = useState(false);
   // color border Inputs on Focus
 
+  // password eye
+  const [eyeClicked, setEyeClicked] = useState(false);
+  // password eye
+
   // Focus on start with useRef
   const nameInputRef = useRef(null);
+  const passwordInputRef = useRef(null);
   // Focus on start with useRef
 
   // useEffect to focus on Name input on start
@@ -23,9 +31,67 @@ const RegisterForm = () => {
   }, []);
   // useEffect to focus on Name input on start
 
+  // Variable to handle text input
+  const [textInputs, setTextInputs] = useState({
+    fullName: "",
+    email: "",
+    password: "",
+  });
+  // Variable to handle text input
+
+  // handleTextUpdate
+  function handleTextUpdate(event) {
+    const propertyName = event.target.name;
+    const currentValue = event.target.value;
+
+    setTextInputs((prevState) => ({
+      ...prevState,
+      [propertyName]: currentValue,
+    }));
+  }
+  // handleTextUpdate
+
+  // Form onSubmit
+  function handleSignupSubmitFx(e) {
+    e.preventDefault();
+
+    console.log(textInputs);
+
+    // First: check there's no empty input
+    if (
+      textInputs.fullName.trim().length === 0 ||
+      textInputs.email.trim().length === 0 ||
+      textInputs.password.trim().length === 0
+    ) {
+      toast.error("Please fill in all the fields");
+      return false;
+    }
+    // First: check there's no empty input
+
+    // Zod Validation
+    try {
+      signUpSchema.parse(textInputs);
+    } catch (error) {
+      console.log(error.errors);
+      toast.error(
+        (t) => (
+          <div className="flex flex-col">
+            {error.errors.map((error, index) => (
+              <span className="mb-2" key={index}>
+                {error.message}
+              </span>
+            ))}
+          </div>
+        ),
+        { id: "error" }
+      );
+    }
+  }
+  // Form onSubmit
+
   return (
     <form
-      action="#"
+      onSubmit={handleSignupSubmitFx}
       className="mb-0 mt-6 space-y-4 rounded-lg p-10 shadow-lg sm:p-6 lg:p-8"
     >
       <p className="text-center text-lg font-medium">
@@ -46,13 +112,16 @@ const RegisterForm = () => {
           </div>
           <input
             ref={nameInputRef}
-            type="email"
+            name="fullName"
+            value={textInputs.fullName}
+            type="text"
             className={`${
               nameFocus ? "outline-indigo-600" : "outline-gray-300"
             } w-full rounded-lg p-4 pe-12 pl-12 text-sm shadow-sm border`}
-            placeholder="Enter email"
+            placeholder="Your Name"
             onFocus={() => setNameFocus(true)}
             onBlur={() => setNameFocus(false)}
+            onChange={handleTextUpdate}
           />
 
           <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -83,12 +152,15 @@ const RegisterForm = () => {
           </div>
           <input
             type="email"
+            name="email"
+            value={textInputs.email}
             className={`${
               emailFocus ? "outline-indigo-600" : "outline-gray-300"
             } w-full rounded-lg p-4 pe-12 pl-12 text-sm shadow-sm border`}
             placeholder="Enter email"
             onFocus={() => setEmailFocus(true)}
             onBlur={() => setEmailFocus(false)}
+            onChange={handleTextUpdate}
           />
 
           <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
@@ -125,17 +197,33 @@ const RegisterForm = () => {
             />
           </div>
           <input
-            type="password"
+            type={`${eyeClicked ? 'text' : 'password'}`}
+            name="password"
+            value={textInputs.password}
+            ref={passwordInputRef}
             className={`${
               passwordFocus ? "outline-indigo-600" : "outline-gray-300"
             } w-full rounded-lg p-4 pe-12 pl-12 text-sm shadow-sm border`}
             placeholder="Enter password"
             onFocus={() => setPasswordFocus(true)}
             onBlur={() => setPasswordFocus(false)}
+            onChange={handleTextUpdate}
           />
 
-          <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
-            <svg
+          <span 
+          className="absolute inset-y-0 end-0 grid place-content-center px-4 cursor-pointer" 
+          onClick={()=>{
+            setEyeClicked(!eyeClicked)
+            passwordInputRef.current.focus();
+            setTimeout(()=> {
+              passwordInputRef.current.setSelectionRange(
+                textInputs.password.length,
+                textInputs.password.length,
+              );
+            }, 0);
+          }}>
+            {eyeClicked ? (
+               <svg
               xmlns="http://www.w3.org/2000/svg"
               className="size-4 text-gray-400"
               fill="none"
@@ -155,6 +243,10 @@ const RegisterForm = () => {
                 d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
               />
             </svg>
+            ): (
+              <HiOutlineEyeOff className="text-gray-400" />
+            )}
+           
           </span>
         </div>
       </div>
