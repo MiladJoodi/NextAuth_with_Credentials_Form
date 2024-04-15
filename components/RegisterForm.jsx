@@ -215,8 +215,14 @@ const RegisterForm = () => {
           onClick={()=>{
             setEyeClicked(!eyeClicked)
             passwordInputRef.current.focus();
+            setTimeout(()=> {
+              passwordInputRef.current.setSelectionRange(
+                textInputs.password.length,
+                textInputs.password.length,
+              );
+            }, 0);
           }}>
-            {!eyeClicked ? (
+            {eyeClicked ? (
                <svg
               xmlns="http://www.w3.org/2000/svg"
               className="size-4 text-gray-400"
