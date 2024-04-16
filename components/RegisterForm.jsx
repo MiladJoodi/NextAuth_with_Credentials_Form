@@ -85,8 +85,11 @@ const RegisterForm = () => {
           }),
         });
 
-        if (!res.ok) {
-          return toast.error("Something went wrong...");
+        // if (!res.ok) {
+        //   return toast.error("Something went wrong...");
+        // }
+        if (res.status == 400) {
+          return toast.error("Email Already Exist");
         }
       } catch (error) {
         console.log(error);

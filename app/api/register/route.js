@@ -9,7 +9,14 @@ export async function POST(request) {
 
   try {
     await connectToDB();
-    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return new NextResponse("Email is already in use", { status: 400 });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);35
     await User.create({ fullname, email, password: hashedPassword });
   } catch (error) {
     console.log("error", error);
