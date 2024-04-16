@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import AuthProvider from "@/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,7 +15,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <Toaster position="top-right" reverseOrder={false} toastOptions={{style: {padding: '15px'}}} />
+        <AuthProvider>
         {children}
+        </AuthProvider>
       </body>
     </html>
   );
