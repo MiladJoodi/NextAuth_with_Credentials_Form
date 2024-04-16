@@ -8,8 +8,13 @@ import { FaUser } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { signUpSchema } from "@/utils/RegisterZodSchema";
 import { HiOutlineEyeOff } from "react-icons/hi";
+import { useRouter } from 'next/navigation';
 
 const RegisterForm = () => {
+
+  // Router
+const router = useRouter()
+  
   // color border Inputs on Focus
   const [nameFocus, setNameFocus] = useState(false);
   const [emailFocus, setEmailFocus] = useState(false);
@@ -97,6 +102,7 @@ const RegisterForm = () => {
 
       // Finally
       toast.success("You have been registered successfully");
+      router.push("/login");
     } catch (error) {
       console.log(error.errors);
       toast.error(
