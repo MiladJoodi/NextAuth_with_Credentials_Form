@@ -52,7 +52,7 @@ const RegisterForm = () => {
   // handleTextUpdate
 
   // Form onSubmit
-  function handleSignupSubmitFx(e) {
+  async function handleSignupSubmitFx(e) {
     e.preventDefault();
 
     console.log(textInputs);
@@ -71,6 +71,29 @@ const RegisterForm = () => {
     // Zod Validation
     try {
       signUpSchema.parse(textInputs);
+      // If everything is OK
+      try {
+        const res = await fetch("/api/register", {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({
+            fullname: textInputs.fullName,
+            email: textInputs.email,
+            password: textInputs.password,
+          }),
+        });
+
+        if (!res.ok) {
+          return toast.error("Something went wrong...");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      // Finally
+      toast.success("You have been registered successfully");
     } catch (error) {
       console.log(error.errors);
       toast.error(
@@ -197,7 +220,7 @@ const RegisterForm = () => {
             />
           </div>
           <input
-            type={`${eyeClicked ? 'text' : 'password'}`}
+            type={`${eyeClicked ? "text" : "password"}`}
             name="password"
             value={textInputs.password}
             ref={passwordInputRef}
@@ -210,43 +233,43 @@ const RegisterForm = () => {
             onChange={handleTextUpdate}
           />
 
-          <span 
-          className="absolute inset-y-0 end-0 grid place-content-center px-4 cursor-pointer" 
-          onClick={()=>{
-            setEyeClicked(!eyeClicked)
-            passwordInputRef.current.focus();
-            setTimeout(()=> {
-              passwordInputRef.current.setSelectionRange(
-                textInputs.password.length,
-                textInputs.password.length,
-              );
-            }, 0);
-          }}>
+          <span
+            className="absolute inset-y-0 end-0 grid place-content-center px-4 cursor-pointer"
+            onClick={() => {
+              setEyeClicked(!eyeClicked);
+              passwordInputRef.current.focus();
+              setTimeout(() => {
+                passwordInputRef.current.setSelectionRange(
+                  textInputs.password.length,
+                  textInputs.password.length
+                );
+              }, 0);
+            }}
+          >
             {eyeClicked ? (
-               <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="size-4 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-              />
-            </svg>
-            ): (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="size-4 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
+              </svg>
+            ) : (
               <HiOutlineEyeOff className="text-gray-400" />
             )}
-           
           </span>
         </div>
       </div>
